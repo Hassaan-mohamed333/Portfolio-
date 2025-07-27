@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بورتفوليو مطور فرونت إند</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="hero-section">
+        <div class="container">
+    <h1 id="hero-title"></h1>
+    <p id="hero-description"></p>
+    <a href="#" class="btn" id="hero-button"></a>
+</div>
+
+<script>
+            fetch('http://localhost/wordpress/wp-json/wp/v2/hero?slug=sec1')
+                .then(response => response.json())
+                .then(data => {
+                    if (data[0]?.acf) {
+                        const heroData = data[0].acf;
+
+                        // Update Hero Title
+                        if (heroData.main_title) {
+                            const titleElement = document.getElementById('hero-title');
+                            if (titleElement) titleElement.textContent = heroData.main_title;
+                        }
+
+                        // Update Hero Description
+                        if (heroData.dec_text) {
+                            const descriptionElement = document.getElementById('hero-description');
+                            if (descriptionElement) descriptionElement.textContent = heroData.dec_text;
+                        }
+
+                        // Update Button Text and Link
+                        const buttonElement = document.getElementById('hero-button');
+                        if (buttonElement) {
+                            if (heroData['btn-text']) {
+                                buttonElement.textContent = heroData['btn-text'];
+                            }
+                            if (heroData.btn_link) {
+                                buttonElement.href = heroData.btn_link;
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching hero data:', error);
+                    // Keep default content on error
+                });
+        </script>
+    </header>
+
+
+
+
+    <section id="about" class="about-me-section">
+        <div class="container">
+            <img src="/basha-elbalad-باشا-البلد.gif" alt="صورة شخصية" class="profile-pic" id="about-image">
+            <h2 class="section-title">عني</h2>
+            <p id="about-description"></p>
+        </div>
+       <script>
+fetch('http://localhost/wordpress/wp-json/wp/v2/sec-1?slug=banner1')
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        if (data[0] && data[0].acf) {
+            var aboutData = data[0].acf;
+            // Update About Image
+            if (aboutData.main_img) {
+                var imageElement = document.getElementById('about-image');
+                if (imageElement) {
+                    // Check if it's a number (media ID)
+                    if (typeof aboutData.main_img === 'number') {
+                        // Fetch the full media object
+                        fetch('http://localhost/wordpress/wp-json/wp/v2/media/' + aboutData.main_img)
+                            .then(function(res) {
+                                return res.json();
+                            })
+                            .then(function(media) {
+                                imageElement.src = media.source_url;
+                                imageElement.alt = media.alt_text || 'صورة شخصية';
+                            })
+                            .catch(function(error) {
+                                console.error('Error fetching media:', error);
+                            });
+                    } else if (typeof aboutData.main_img === 'string') {
+                        // It's already a URL string
+                        imageElement.src = aboutData.main_img;
+                        imageElement.alt = 'صورة شخصية';
+                    } else if (typeof aboutData.main_img === 'object' && aboutData.main_img.url) {
+                        // It's an ACF image object
+                        imageElement.src = aboutData.main_img.url;
+                        imageElement.alt = aboutData.main_img.alt || 'صورة شخصية';
+                    }
+                }
+            }
+
+            // Update Section Title
+            if (aboutData.animate_title) {
+                var titleElement = document.querySelector('.section-title');
+                if (titleElement) {
+                    titleElement.textContent = aboutData.animate_title;
+                }
+            }
+
+            // Update About Description
+            if (aboutData.dec_title) {
+                var descriptionElement = document.getElementById('about-description');
+                if (descriptionElement) {
+                    descriptionElement.textContent = aboutData.dec_title;
+                }
+            }
+        }
+    })
+    .catch(function(error) {
+        console.error('Error fetching about data:', error);
+    });
+</script>
+    </section>
+
+    <section id="skills" class="skills-section">
+        <div class="container">
+            <h2 class="section-title">مهاراتي</h2>
+            <div class="skills-grid" id="skills-list">
+                <!-- Skills will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects-section">
+        <div class="container">
+            <h2 class="section-title">مشاريعي</h2>
+            <div class="projects-grid" id="projects-list">
+                <!-- Projects will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-me-section">
+        <div class="container">
+            <h2 class="section-title">تواصل معي</h2>
+            <p>البريد الإلكتروني: <span id="contact-email"></span></p>
+            <p>الهاتف: <span id="contact-phone"></span></p>
+            <div class="social-links" id="social-links">
+                <!-- Social links will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
